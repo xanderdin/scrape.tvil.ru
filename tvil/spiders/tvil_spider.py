@@ -1,4 +1,3 @@
-import scrapy
 import re
 
 from scrapy.http import Request
@@ -9,11 +8,9 @@ from tvil.items import TvilItem
 
 
 class TvilSpider(CrawlSpider):
-    name = 'krym'
+    name = 'tvil_spider'
     allowed_domains = ['tvil.ru']
-    start_urls = [
-        'http://tvil.ru/city/otdyh-v-krymu',
-    ]
+    # start_urls = ['http://tvil.ru/city/otdyh-v-krymu']
     rules = (
         Rule(LinkExtractor(restrict_css='li.next')),
         Rule(
@@ -21,6 +18,10 @@ class TvilSpider(CrawlSpider):
             callback='parse_ad_item'
         ),
     )
+
+    def __init__(self, region='krym', *args, **kwargs):
+        super(TvilSpider, self).__init__(*args, **kwargs)
+        self.start_urls = ['http://tvil.ru/city/%s' % region]
 
     def parse_ad_item(self, response):
         item = TvilItem()
