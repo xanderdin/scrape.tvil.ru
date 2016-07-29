@@ -24,3 +24,4 @@ class TvilItem(scrapy.Item):
     square = scrapy.Field()
     owner_name = scrapy.Field()
     description = scrapy.Field()
+    misc_info = scrapy.Field()

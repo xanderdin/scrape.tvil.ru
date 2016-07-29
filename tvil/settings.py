@@ -103,5 +103,6 @@ FEED_EXPORT_FIELDS = [
     'nr_guests',
     'square',
     'description',
+    'misc_info',
     'img_urls',
 ]

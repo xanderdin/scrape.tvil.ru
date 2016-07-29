@@ -8,11 +8,14 @@ from tvil.items import TvilItem
 
 
 class TvilSpider(CrawlSpider):
+
     name = 'tvil_spider'
     allowed_domains = ['tvil.ru']
-    # start_urls = ['http://tvil.ru/city/otdyh-v-krymu']
+
     rules = (
+        # next page traversal
         Rule(LinkExtractor(restrict_css='li.next')),
+        # item extraction
         Rule(
             LinkExtractor(restrict_css='a.Button--openEntity'),
             callback='parse_ad_item'
@@ -24,15 +27,20 @@ class TvilSpider(CrawlSpider):
         self.start_urls = ['http://tvil.ru/city/%s' % region]
 
     def parse_ad_item(self, response):
+
         item = TvilItem()
+
         for k in item:
             item[k] = ''
+
         item['url'] = response.url
+
         a = response.css(
             '.EntityPage-Main > div.container-fluid > div > h1::text'
             ).extract()
         if a:
             item['title'] = a[0]
+
         a = response.css(
             '.EntityPage-Main > div.container-fluid > div > p > a::text'
             ).extract()
@@ -46,7 +54,9 @@ class TvilSpider(CrawlSpider):
             'img[data-image-big]::attr(data-image-big)'
             ).extract()
 
-        # item['price'] = response.css('.price-start > div').extract()
+        a = response.css('div.price-start > div > b::text').extract()
+        if a:
+            item['price'] = a[0]
 
         a = response.css('.big_number::text').extract()
         if a:
@@ -62,18 +72,18 @@ class TvilSpider(CrawlSpider):
                 if m:
                     item['square'] = m.group(1)
 
-        # item['nr_floors'], item['nr_rooms'], item['nr_guests'], item['square'] \
-        #     = response.css('.big_number::text').extract()
-
-        item['owner_name'] = response.css(
+        a = response.css(
             '.owner > .row > div > h3 > ::text'
             ).extract()
+        if a:
+            item['owner_name'] = a[0]
 
         a = response.xpath(
             '//p[starts-with(@id, "description_")]/text()'
             ).extract()
-
         if a:
             item['description'] = a[0]
+
+        item['misc_info'] = response.css('span.txt::text').extract()
 
         yield item
