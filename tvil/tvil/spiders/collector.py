@@ -4,12 +4,12 @@ from scrapy.http import Request
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 
-from tvil.items import TvilItem
+from tvil.items import AdItem
 
 
-class TvilSpider(CrawlSpider):
+class CollectorSpider(CrawlSpider):
 
-    name = 'tvil_spider'
+    name = 'collector'
     allowed_domains = ['tvil.ru']
 
     rules = (
@@ -23,12 +23,12 @@ class TvilSpider(CrawlSpider):
     )
 
     def __init__(self, region='krym', *args, **kwargs):
-        super(TvilSpider, self).__init__(*args, **kwargs)
+        super(CollectorSpider, self).__init__(*args, **kwargs)
         self.start_urls = ['http://tvil.ru/city/%s' % region]
 
     def parse_ad_item(self, response):
 
-        item = TvilItem()
+        item = AdItem()
 
         for k in item:
             item[k] = ''
@@ -47,16 +47,25 @@ class TvilSpider(CrawlSpider):
         if a:
             m = re.search(r'TVIL (\d+-\d+) (.*)', a[0])
             if m:
-                item['tvil_id'] = m.group(1)
+                item['ad_id'] = m.group(1)
                 item['address'] = m.group(2)
 
-        item['img_urls'] = response.css(
+        item['image_urls'] = response.css(
             'img[data-image-big]::attr(data-image-big)'
             ).extract()
 
-        a = response.css('div.price-start > div > b::text').extract()
-        if a:
-            item['price'] = a[0]
+        # a = response.css('div.price-start > div > b::text').extract()
+        # if a:
+        #     item['price'] = a[0]
+        item['price'] = ' '.join(
+            response.css(
+                '''
+                div.price-start >
+                div.btn-default.btn-block.btn-lightgray.btn-lg
+                ::text
+                '''
+            ).extract()
+        ).strip()
 
         a = response.css('.big_number::text').extract()
         if a:

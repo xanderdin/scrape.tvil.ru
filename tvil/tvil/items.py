@@ -5,23 +5,21 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy import Item, Field
 
 
-class TvilItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    url = scrapy.Field()
-    tvil_id = scrapy.Field()
-    img_urls = scrapy.Field()
-    phone = scrapy.Field()
-    title = scrapy.Field()
-    address = scrapy.Field()
-    price = scrapy.Field()
-    nr_floors = scrapy.Field()
-    nr_rooms = scrapy.Field()
-    nr_guests = scrapy.Field()
-    square = scrapy.Field()
-    owner_name = scrapy.Field()
-    description = scrapy.Field()
-    misc_info = scrapy.Field()
+class AdItem(Item):
+    url = Field()
+    ad_id = Field()
+    image_urls = Field()
+    phone = Field()
+    title = Field()
+    address = Field()
+    price = Field()
+    nr_floors = Field()
+    nr_rooms = Field()
+    nr_guests = Field()
+    square = Field()
+    owner_name = Field()
+    description = Field()
+    misc_info = Field()

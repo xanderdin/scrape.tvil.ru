@@ -92,7 +92,7 @@ ROBOTSTXT_OBEY = True
 
 FEED_EXPORT_FIELDS = [
     'url',
-    'tvil_id',
+    'ad_id',
     'title',
     'address',
     'price',
@@ -104,5 +104,5 @@ FEED_EXPORT_FIELDS = [
     'square',
     'description',
     'misc_info',
-    'img_urls',
+    'image_urls',
 ]
